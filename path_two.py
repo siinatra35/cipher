@@ -1,5 +1,7 @@
 import math
-
+ 
+# counter clock wise cipher 
+ 
 def encrypt(grid):
     encrypted_text = ""
     grid_width = len(grid[0])
