@@ -1,6 +1,7 @@
 import math
 import sys
 
+
 # Current path position:
 g_posR = 0  # row position
 g_posC = 0  # column position
@@ -18,8 +19,8 @@ g_borderB = 0  # bottom row
 grid = []  # holds matrix
 
 
-def fillTableForEncrypt(letters, totalRows, totalCols):
-
+def fillTableForEncrypt(letters, totalRows, totalCols): 
+    """ creates an array to hold the plaintext and appends extra character if nessaracy """
     for i in range(math.ceil(len(letters) / totalCols)):
         rows = []
         for j in range(totalCols):
@@ -32,12 +33,12 @@ def fillTableForEncrypt(letters, totalRows, totalCols):
     return grid
 
 
-def fillTableForDecrypt(letters, totalRows, totalCols, pathtype):
+def fillTableForDecrypt(letters, totalRows, totalCols, pathtype): 
     """creates decryption matrix"""
     global g_posR, g_posC
     newGrid = []
 
-    for i in range(math.ceil(len(letters) / totalCols)):
+    for i in range(math.ceil(len(letters) / totalCols)): 
         rows = []
         for j in range(totalCols):
             if i * totalCols + j < len(letters):
@@ -57,7 +58,9 @@ def fillTableForDecrypt(letters, totalRows, totalCols, pathtype):
 
 
 def readCipherText(grid, totalRows, totalCols, pathtype):
+
     initPathParameters(pathtype, totalRows, totalCols)
+    
     global g_posR, g_posC
     cipher_text = ""
 
@@ -96,6 +99,7 @@ def initPathParameters(pathtype, totalRows, totalCols):
 
 
 def makeOneStep(pathtype):
+    """moves position in grid"""
     global g_posR, g_posC, g_borderL, g_borderT, g_borderR, g_borderB, g_dirR, g_dirC
 
     if g_posR + g_dirR >= g_borderT and g_posR + g_dirR <= g_borderB:
@@ -146,54 +150,65 @@ def makeOneStep(pathtype):
 
 
 def menu_check(questions):
-    values = " "
-    try:
+    values = ""
+    try:    
         while True:
             user_input = input(questions)
-            if len(user_input) <= 0:
-                print("Error no values were entered.")
-            elif user_input.isnumeric() and int(user_input) > 2:
+            if len(user_input) == 0:
+                print("Error! No input detected. ")
+            elif user_input.isalpha():
                 values = user_input
                 break
-            else:
+            elif user_input.isdigit() and int(user_input) > 2:
                 values = user_input
                 break
     except Exception as e:
-        print(e)
-        sys.exit(0)
+        print("Error: ", e)
 
-    return user_input
+    return values
+
+
+def topToBottom(plain_text, decode=False)
+    while len():
+        
+
+def grouping(plain_text, totalCols):
+     if len(plain_text) % totalCols == 0:
+        return [plain_text[i*totalCols:i*totalCols+totalCols] for i in range(len(plain_text)//totalCols)]
+    else:
+        return [text[i*n:i*n+n] for i in range(len(text)//n+1)]
+
+
 
 def main():
-
     additional_Path = ""
-    pathtype = ""
-    menu_options = """Please select the desired route path.\n[1]. clockwise\n[2]. anticlockwise\n[3]. Spiraling inside out\n[4]. add Top-to-Bottom\n\n>>> """
-    route_size_input = "Please enter a route size: "
+    path_options = """Please select the desired route path.\n[1]. clockwise\n[2]. anticlockwise\n[3]. Spiraling inside out\n[4]. add Top-to-Bottom\n\n>>> """
+    route_size_choice = "\nPlease enter a route size (3 to 8): "
     get_plaintext = "Please enter the desired text for encryption/decryption: "
 
     while True:
-        options = input(menu_options)
-        if options == "1":
+        choice = input(path_options)
+        if choice == "1":
             pathtype = "clockwise"
             break
-        elif options == "2":
-            pathtype = "anticlockwise"
-            break
-        elif options == "2":
+        elif choice == "2":
             pathtype = "clockwise"
             break
-        elif options == "3":
+
+        elif choice == "3":
             pathtype = "clockwise"
             additional_Path = "spiraling"
             break
         else:
-            print("Invalid input: Please select one of the options listed")
+            print('\nInvalid input: Please enter one of the choices listed above.\n')
+    ############################
+    try:
+        route_size = menu_check(route_size_choice)
+        plain_text = menu_check(get_plaintext)
+    except Exception as e:
+        print('Error:', e)
 
-    route_size = menu_check(route_size_input)
-    plain_text = menu_check(get_plaintext)
-
-    totalCols = route_size
+    totalCols = int(route_size)
     totalRows = len(plain_text) / totalCols
 
     if totalRows != math.floor(totalRows):
@@ -201,14 +216,15 @@ def main():
     elif type(totalRows) is float:
         totalRows = len(plain_text) // totalCols
 
-    if options == "3":
+    if choice == "3":
         print("Selected path type:", additional_Path)
-    else: 
+    else:
         print("Selected path type:", pathtype)
 
-    print("Total Columns:", totalCols)
-    print("Total Rows:", totalRows)
+    print("Total Columns: ", totalCols)
+    print("Total Rows: ", totalRows)
 
+    
     grid = fillTableForEncrypt(plain_text, totalRows, totalCols)
     encryptedText = readCipherText(grid, totalRows, totalCols, pathtype)
 
@@ -216,17 +232,19 @@ def main():
     if totalRows != math.floor(totalRows):
         print("The length does not match the table dimensions.")
         sys.exit(0)
-    else:
+    elif choice == "1" or choice == "2":
         new_grid = fillTableForDecrypt(
             encryptedText, totalRows, totalCols, pathtype)
         decryptedText = readPlainText(new_grid, totalRows, totalCols)
 
-    if additional_Path == "spiraling":
+    if  choice == "3":
         print("Encrypted Text: ", encryptedText[::-1])
         print("Decrypted Text: ", decryptedText[::1])
-    else:
+    elif choice == "1" or choice == "2":
         print("Encrypted Text: ", encryptedText)
         print("Decrypted Text: ", decryptedText)
+    elif choice == "4":
+        print('4 was chosen')
 
 
 if __name__ == "__main__":
