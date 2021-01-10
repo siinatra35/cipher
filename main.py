@@ -2,20 +2,20 @@ import math
 import sys
 
 # Current path position:
-g_posR = 0 # row position
-g_posC = 0 # column position
+g_posR = 0  # row position
+g_posC = 0  # column position
 
 # Current path direction:
-g_dirR = 0 # row direction 
-g_dirC = 0 # column direction 
+g_dirR = 0  # row direction
+g_dirC = 0  # column direction
 
 # Current path borders:
-g_borderL = 0 # left column 
-g_borderT = 0 # top row
-g_borderR = 0 # right column 
-g_borderB = 0 # bottom row 
+g_borderL = 0  # left column
+g_borderT = 0  # top row
+g_borderR = 0  # right column
+g_borderB = 0  # bottom row
 
-grid = [] # holds matrix 
+grid = []  # holds matrix
 
 
 def fillTableForEncrypt(letters, totalRows, totalCols):
@@ -28,9 +28,6 @@ def fillTableForEncrypt(letters, totalRows, totalCols):
             else:
                 rows.append('-')
         grid.append(rows)
-    
-   # for i in grid:
-   #     print(i)
 
     return grid
 
@@ -82,8 +79,8 @@ def readPlainText(matrix, totalRows, totalCols):
 
 def initPathParameters(pathtype, totalRows, totalCols):
     global g_posR, g_posC, g_borderL, g_borderT, g_borderR, g_borderB, g_dirR, g_dirC
-    g_posR = 0 # current row position
-    g_posC = totalCols - 1 # current column position
+    g_posR = 0  # current row position
+    g_posC = totalCols - 1  # current column position
 
     g_borderL = 0
     g_borderT = 0
@@ -91,17 +88,18 @@ def initPathParameters(pathtype, totalRows, totalCols):
     g_borderB = totalRows - 1
 
     if pathtype == "clockwise":
-        g_dirR = 1 
+        g_dirR = 1
         g_dirC = 0
     elif pathtype == "anticlockwise":
         g_dirR = 0
         g_dirC = -1
-   
+
+
 def makeOneStep(pathtype):
     global g_posR, g_posC, g_borderL, g_borderT, g_borderR, g_borderB, g_dirR, g_dirC
 
     if g_posR + g_dirR >= g_borderT and g_posR + g_dirR <= g_borderB:
-        g_posR += g_dirR # row position
+        g_posR += g_dirR  # row position
     else:
         if g_dirR == 1:
             if pathtype == "clockwise":
@@ -122,9 +120,8 @@ def makeOneStep(pathtype):
                 g_dirC = -1
                 g_borderR -= 1
 
-
     if g_posC + g_dirC >= g_borderL and g_posC + g_dirC <= g_borderR:
-        g_posC += g_dirC # column position
+        g_posC += g_dirC  # column position
     else:
         if g_dirC == 1:
             if pathtype == "clockwise":
@@ -148,30 +145,53 @@ def makeOneStep(pathtype):
         g_posR += g_dirR
 
 
+def menu_check(questions):
+    values = " "
+    try:
+        while True:
+            user_input = input(questions)
+            if len(user_input) <= 0:
+                print("Error no values were entered.")
+            elif user_input.isnumeric() and int(user_input) > 2:
+                values = user_input
+                break
+            else:
+                values = user_input
+                break
+    except Exception as e:
+        print(e)
+        sys.exit(0)
+
+    return user_input
+
 def main():
-    ans = True
+
     additional_Path = ""
+    pathtype = ""
+    menu_options = """Please select the desired route path.\n[1]. clockwise\n[2]. anticlockwise\n[3]. Spiraling inside out\n[4]. add Top-to-Bottom\n\n>>> """
+    route_size_input = "Please enter a route size: "
+    get_plaintext = "Please enter the desired text for encryption/decryption: "
 
-
-    while ans:
-        option = input(
-            """Please select the desired route path.\n[1]. clockwise\n[2]. anticlockwise\n[3]. Spiraling inside out\n[4]. add Top-to-Bottom\n\n>>> """)
-        if option == "1": # clockwise 
+    while True:
+        options = input(menu_options)
+        if options == "1":
             pathtype = "clockwise"
-            route_size = int(input("Please enter a route size: "))
-            plain_text = input("Please enter the desired text for encryption/decryption: ")
-            ans = False
-        elif option == "2": # counter clockwise 
+            break
+        elif options == "2":
             pathtype = "anticlockwise"
-            route_size = int(input("Please enter a route size: "))
-            plain_text = input("Please enter the desired text for encryption/decryption: ")
-            ans = False
-        elif option == "3": # spiraling inside out
+            break
+        elif options == "2":
+            pathtype = "clockwise"
+            break
+        elif options == "3":
             pathtype = "clockwise"
             additional_Path = "spiraling"
-            route_size = int(input("Please enter a route size: "))
-            plain_text = input("Please enter the desired text for encryption/decryption: ")
-            ans = False
+            break
+        else:
+            print("Invalid input: Please select one of the options listed")
+
+    route_size = menu_check(route_size_input)
+    plain_text = menu_check(get_plaintext)
 
     totalCols = route_size
     totalRows = len(plain_text) / totalCols
@@ -181,27 +201,32 @@ def main():
     elif type(totalRows) is float:
         totalRows = len(plain_text) // totalCols
 
-    print("Selected path type:" , pathtype)
+    if options == "3":
+        print("Selected path type:", additional_Path)
+    else: 
+        print("Selected path type:", pathtype)
+
     print("Total Columns:", totalCols)
     print("Total Rows:", totalRows)
 
     grid = fillTableForEncrypt(plain_text, totalRows, totalCols)
     encryptedText = readCipherText(grid, totalRows, totalCols, pathtype)
-    
 
     new_grid = []
     if totalRows != math.floor(totalRows):
         print("The length does not match the table dimensions.")
         sys.exit(0)
     else:
-        new_grid = fillTableForDecrypt(encryptedText, totalRows, totalCols, pathtype)
+        new_grid = fillTableForDecrypt(
+            encryptedText, totalRows, totalCols, pathtype)
         decryptedText = readPlainText(new_grid, totalRows, totalCols)
-        if additional_Path == "spiraling":
-            print("Encrypted Text: ", encryptedText[::-1])
-            print("Decrypted Text: ", decryptedText[::1])
-        else:
-            print("Encrypted Text: ", encryptedText)
-            print("Decrypted Text: ", decryptedText)
+
+    if additional_Path == "spiraling":
+        print("Encrypted Text: ", encryptedText[::-1])
+        print("Decrypted Text: ", decryptedText[::1])
+    else:
+        print("Encrypted Text: ", encryptedText)
+        print("Decrypted Text: ", decryptedText)
 
 
 if __name__ == "__main__":
