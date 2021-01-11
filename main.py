@@ -21,54 +21,52 @@ grid = []  # holds matrix
 
 def fillTableForEncrypt(letters, totalRows, totalCols):  
     """ creates an array to hold the plaintext and appends extra character if nessaracy """
+    # creates a matrix using the text length divided by the total columns
     for number_of_rows in range(math.ceil(len(letters) / totalCols)): 
-        rows = []
-        for j in range(totalCols):
-            if number_of_rows * totalCols + number_of_rows < len(letters):
-                rows.append(letters[i * totalCols + j])
+        rows = [] # holds cipher text 
+        for index in range(totalCols):
+            if number_of_rows * totalCols + index < len(letters):
+                rows.append(letters[number_of_rows * totalCols + index])  
             else:
-                rows.append('-')
-        grid.append(rows)
-
-    return grid
+                rows.append('-') # appends a - character if the matrix has empty spaces
+        grid.append(rows) # appends newly formed matrix to grid
+    return grid # returns newly formed grid 
 
 
 def fillTableForDecrypt(letters, totalRows, totalCols, pathtype): 
-    """creates decryption matrix"""
-    global g_posR, g_posC
-    newGrid = []
+    """creates decryption matrix using the ciphertext"""
+    global g_posR, g_posC # current row position and and current column position
+    newGrid = [] # holds decrypted grid 
 
-    for i in range(math.ceil(len(letters) / totalCols)): 
-        rows = []
-        for j in range(totalCols):
-            if i * totalCols + j < len(letters):
-                rows.append(letters[i * totalCols + j])
+    # creates a matrix using the ciphertext length and total columns 
+    for number_of_rows in range(math.ceil(len(letters) / totalCols)): 
+        rows = [] # holds a decrypted text
+        for index in range(totalCols):
+            if number_of_rows * totalCols + index < len(letters):
+                rows.append(letters[number_of_rows * totalCols + index])
             else:
-                rows.append('-')
-        newGrid.append(rows)
-
-    initPathParameters(pathtype, totalRows, totalCols)
-    pos = 0
-    while pos < totalRows * totalCols:
-        newGrid[g_posR][g_posC] = letters[pos]
-        makeOneStep(pathtype)
-        pos += 1
-
-    return newGrid
+                rows.append('-') # # appends a - character if the matrix has empty spaces
+        newGrid.append(rows) # appends newly formed matrix to grid
+  
+    initPathParameters(pathtype, totalRows, totalCols) # we call this function 
+    pos = 0 # position in the grid 
+    while pos < totalRows * totalCols: # writes newly formed grid 
+        newGrid[g_posR][g_posC] = letters[pos] # using row position and grid position we create the new matrix 
+        makeOneStep(pathtype) # this function allow use to read the matrix based on the chosen path
+        pos += 1 # increments by to add letters
+    return newGrid # returns newly formed grid holding the decrypted text
 
 
 def readCipherText(grid, totalRows, totalCols, pathtype):
-
-    initPathParameters(pathtype, totalRows, totalCols)
-    
-    global g_posR, g_posC
-    cipher_text = ""
-
+    """reads the newly created cipher text"""
+    initPathParameters(pathtype, totalRows, totalCols) # sets the starting, direction, and path for the grid 
+    global g_posR, g_posC # row position and column position 
+    cipher_text = "" # holds created cipher text
+    # appends the cipher text from the grid
     while len(cipher_text) < totalRows * totalCols:
         cipher_text += grid[g_posR][g_posC]
-        makeOneStep(pathtype)
-
-    return cipher_text
+        makeOneStep(pathtype) # moves position in the grid 
+    return cipher_text # returns new created encrypted text
 
 
 def readPlainText(matrix, totalRows, totalCols):
@@ -85,16 +83,16 @@ def initPathParameters(pathtype, totalRows, totalCols):
     g_posR = 0  # current row position
     g_posC = totalCols - 1  # current column position
 
-    g_borderL = 0
-    g_borderT = 0
-    g_borderR = totalCols - 1
-    g_borderB = totalRows - 1
+    g_borderL = 0 # left side of the grid
+    g_borderT = 0 # top side of the grid
+    g_borderR = totalCols - 1 # right side of the grid
+    g_borderB = totalRows - 1 # bottom side of the grid
 
-    if pathtype == "clockwise":
-        g_dirR = 1
-        g_dirC = 0
+    if pathtype == "clockwise": 
+        g_dirR = 1 # sets starting direction for the row
+        g_dirC = 0 # sets starting direction for the column
     elif pathtype == "anticlockwise":
-        g_dirR = 0
+        g_dirR = 0 
         g_dirC = -1
 
 
@@ -106,7 +104,7 @@ def makeOneStep(pathtype):
         g_posR += g_dirR  # row position
     else:
         if g_dirR == 1:
-            if pathtype == "clockwise":
+            if pathtype == "clockwise": # moves down the grid
                 g_dirR = 0
                 g_dirC = -1
                 g_borderR -= 1
@@ -128,11 +126,11 @@ def makeOneStep(pathtype):
         g_posC += g_dirC  # column position
     else:
         if g_dirC == 1:
-            if pathtype == "clockwise":
+            if pathtype == "clockwise": # moves up in the grid
                 g_dirR = 1
                 g_dirC = 0
                 g_borderT += 1
-            elif pathtype == "anticlockwise":
+            elif pathtype == "anticlockwise": 
                 g_dirR = -1
                 g_dirC = 0
                 g_borderB -= 1
@@ -150,30 +148,32 @@ def makeOneStep(pathtype):
 
 
 def menu_check(questions):
-    values = ""
+    """checks input on user and repeats questions if a error is encountered"""
+    values = "" 
     try:    
         while True:
             user_input = input(questions)
-            if len(user_input) == 0:
+            if len(user_input) == 0: # checks for no input 
                 print("Error! No input detected. ")
-            elif user_input.isalpha():
-                values = user_input
-                break
-            elif user_input.isdigit() and int(user_input) > 2:
-                values = user_input
-                break
-    except Exception as e:
-        print("Error: ", e)
+            elif user_input.isalpha(): # if only letters are entered 
+                values = user_input # assigns text from user input 
+                break # stops question loop
+            elif user_input.isdigit() and int(user_input) > 2: # if only numbers are entered and if input is greater then 2
+                values = user_input # assigns number based on user input 
+                break # stops question loop
+    except Exception as e: # catches any Exceptions 
+        print("Error: ", e) # prints error code 
 
-    return values
+    return values # returns user input
 
 
 
 def grouping(plain_text, totalCols):
-     if len(plain_text) % totalCols == 0:
-        return [plain_text[i*totalCols:i*totalCols+totalCols] for i in range(len(plain_text)//totalCols)]
-     else:
-        return [plain_text[i*totalCols:i*totalCols+totalCols] for i in range(len(plain_text)//totalCols+1)]
+    """creates matrix from the plaintext that is used to encrypt and decrypt"""
+    if len(plain_text) % totalCols == 0: # checks if there are extra spaces 
+        return [plain_text[rows*totalCols:rows*totalCols+totalCols] for rows in range(len(plain_text)//totalCols)]
+    else:
+        return [plain_text[rows*totalCols:rows*totalCols+totalCols] for rows in range(len(plain_text)//totalCols+1)]
 
 
 def topToBottom(plaintext, route_size, decrypt=False):
@@ -217,7 +217,7 @@ def topToBottom(plaintext, route_size, decrypt=False):
 
 def main():
     additional_Path = ""
-    path_options = """Please select the desired route path.\n[1]. clockwise\n[2]. anticlockwise\n[3]. Spiraling inside out\n[4]. add Top-to-Bottom\n\n>>> """
+    path_options = """Please select the desired route path.\n[1]. clockwise\n[2]. anticlockwise\n[3]. Spiraling inside out\n[4]. Top-to-Bottom\n\n>>> """
     route_size_choice = "\nPlease enter a route size (3 to 8): "
     get_plaintext = "Please enter the desired text for encryption/decryption: "
 
@@ -237,11 +237,12 @@ def main():
             pathtype = "Top-to-Bottom"
             break
         else:
-            print('\nInvalid input: Please enter one of the choices listed above.\n')
+            print('Invalid input: Please enter one of the choices listed above.\n')
 
     try: 
         route_size = menu_check(route_size_choice)
         plain_text = menu_check(get_plaintext)
+        plain_text =  plain_text.replace(" ", "")
     except Exception as e:
         print('Error:', e)
 
