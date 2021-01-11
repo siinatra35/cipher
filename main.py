@@ -19,12 +19,12 @@ g_borderB = 0  # bottom row
 grid = []  # holds matrix
 
 
-def fillTableForEncrypt(letters, totalRows, totalCols): 
+def fillTableForEncrypt(letters, totalRows, totalCols):  
     """ creates an array to hold the plaintext and appends extra character if nessaracy """
-    for i in range(math.ceil(len(letters) / totalCols)):
+    for number_of_rows in range(math.ceil(len(letters) / totalCols)): 
         rows = []
         for j in range(totalCols):
-            if i * totalCols + j < len(letters):
+            if number_of_rows * totalCols + number_of_rows < len(letters):
                 rows.append(letters[i * totalCols + j])
             else:
                 rows.append('-')
