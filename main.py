@@ -1,6 +1,6 @@
 import math
 import sys
-
+import re
 
 # Current path position:
 g_posR = 0  # row position
@@ -149,23 +149,23 @@ def makeOneStep(pathtype):
 
 def menu_check(questions):
     """checks input on user and repeats questions if a error is encountered"""
-    values = "" 
+    values = "" # holds user input 
     try:    
         while True:
             user_input = input(questions)
-            if len(user_input) == 0: # checks for no input 
+            user_input = user_input.replace(" ","") # removes spaces
+            print(user_input)
+            if len(user_input) == 0 or int(user_input) <= 2: # checks for no input 
                 print("Error! No input detected. ")
-            elif user_input.isalpha(): # if only letters are entered 
+            elif re.match("^[A-Za-z0-9_-]*$", user_input): # if only letters are entered or special characters
+                print('letters')
                 values = user_input # assigns text from user input 
-                break # stops question loop
-            elif user_input.isdigit() and int(user_input) > 2: # if only numbers are entered and if input is greater then 2
-                values = user_input # assigns number based on user input 
                 break # stops question loop
     except Exception as e: # catches any Exceptions 
         print("Error: ", e) # prints error code 
 
     return values # returns user input
-
+    
 
 
 def grouping(plain_text, totalCols):
@@ -218,7 +218,7 @@ def topToBottom(plaintext, route_size, decrypt=False):
 def main():
     additional_Path = ""
     path_options = """Please select the desired route path.\n[1]. clockwise\n[2]. anticlockwise\n[3]. Spiraling inside out\n[4]. Top-to-Bottom\n\n>>> """
-    route_size_choice = "\nPlease enter a route size (3 to 8): "
+    route_size_choice = "\nPlease enter a route size above 2: "
     get_plaintext = "Please enter the desired text for encryption/decryption: "
 
     while True: 
@@ -242,7 +242,6 @@ def main():
     try: 
         route_size = menu_check(route_size_choice)
         plain_text = menu_check(get_plaintext)
-        plain_text =  plain_text.replace(" ", "")
     except Exception as e:
         print('Error:', e)
 
