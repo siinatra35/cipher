@@ -252,42 +252,41 @@ def main():
         # rounds to the nearest whole number 
         totalRows = len(plain_text) // totalCols
 
-    # prints pathtype 
+    # prints the selected pathtype 
     if choice == "3": 
         print("Selected path type:", additional_Path)
     else:
         print("Selected path type:", pathtype)
 
-    # prints column and row values
+    # prints column and row values to user
     print("Total Columns: ", totalCols)
     print("Total Rows: ", totalRows)
 
 
-    grid = fillTableForEncrypt(plain_text, totalRows, totalCols)
-    encryptedText = readCipherText(grid, totalRows, totalCols, pathtype)
+    # grid = fillTableForEncrypt(plain_text, totalRows, totalCols)
+    # encryptedText = readCipherText(grid, totalRows, totalCols, pathtype)
+    
 
     new_grid = []
     if totalRows != math.floor(totalRows):
         print("The length does not match the table dimensions.")
         sys.exit(0)
     elif choice == "1" or choice == "2" or choice == "3":
-        new_grid = fillTableForDecrypt(
-            encryptedText, totalRows, totalCols, pathtype)
+        grid = fillTableForEncrypt(plain_text, totalRows, totalCols)
+        encryptedText = readCipherText(grid, totalRows, totalCols, pathtype)
+        new_grid = fillTableForDecrypt(encryptedText, totalRows, totalCols, pathtype)
         decryptedText = readPlainText(new_grid, totalRows, totalCols)
     elif choice == "4":
         encryptedText = topToBottom(plain_text, totalCols)
         decryptedText = topToBottom(encryptedText, totalCols, decrypt=True)
 
-    if choice == "3": # inside out path
-        # we reverse the text simulating a inside out path
+  
+    if choice == "1" or choice == "2" or choice == "4":
+        print("Encrypted Text: ", encryptedText)
+        print("Decrypted Text: ", decryptedText)
+    else:
         print("Encrypted Text: ", encryptedText[::-1])
         print("Decrypted Text: ", decryptedText[::1])
-    elif choice == "1" or choice == "2":
-        print("Encrypted Text: ", encryptedText)
-        print("Decrypted Text: ", decryptedText)
-    elif choice == "4":
-        print("Encrypted Text: ", encryptedText)
-        print("Decrypted Text: ", decryptedText)
 
 
 if __name__ == "__main__":
