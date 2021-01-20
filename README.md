@@ -18,14 +18,21 @@ pathtype = clockwise
 
 We write the text to a 3x4 grid and read the grid in a clockwise pattern.
 
-
 |h |e |l|
 |--|--|--|   
 |l |o |w
 |o |r |l
 |d |- |-
 
-Result: lwl--dolheor
+`Result: lwl--dolheor`
 
 <hr></hr>
+
 <b>References</b>
+
+[crypto corner route cipher](https://crypto.interactive-maths.com/route-cipher.html#:~:text=The%20Route%20Cipher%20is%20a,off%20following%20the%20route%20chosen)
+
+
+[dcode route cipher](https://www.dcode.fr/route-cipher)
+
+[crypto-it](http://www.crypto-it.net/eng/simple/route-cipher.html)
