@@ -60,6 +60,7 @@ def fillTableForDecrypt(letters, totalRows, totalCols, pathtype):
         # this function allow use to read the matrix based on the chosen path
         makeOneStep(pathtype)
         pos += 1  # increments by to add letters
+    
     return newGrid  # returns newly formed grid holding the decrypted text
 
 #done
@@ -71,20 +72,22 @@ def readCipherText(grid, totalRows, totalCols, pathtype):
     # appends the cipher text from the grid
     while len(cipher_text) < totalRows * totalCols:
         cipher_text += grid[g_posR][g_posC]
-        print(g_posR,g_posC)
+        #print(g_posR,g_posC)
         makeOneStep(pathtype)  # moves position in the grid
     return cipher_text  # returns new created encrypted text
 
-# done
+
 def readPlainText(decryptedGrid, totalRows, totalCols):
+    """reads decrypted matrix"""
     plain_text = "" # holds decryped text 
     for index in range(totalRows): # loops through rows number
         for element in range(totalCols): # loops through column number
             plain_text += str(decryptedGrid[index][element]) # appends characters from grid
     return plain_text # returns decrypted text
 
-# done 
+
 def initPathParameters(pathtype, totalRows, totalCols):
+    """sets starting positions for clockwise,counterclockwise decryption/encryption"""
     global g_posR, g_posC, g_borderL, g_borderT, g_borderR, g_borderB, g_dirR, g_dirC
     g_posR = 0  # current row position
     g_posC = totalCols - 1  # current column position
@@ -101,7 +104,6 @@ def initPathParameters(pathtype, totalRows, totalCols):
         g_dirR = 0 # sets starting direction for the row
         g_dirC = -1 # sets starting direction for the column
 
-# done
 def makeOneStep(pathtype):
     """moves position in grid"""
     # position, direction, and border values that determine movement through the grid
@@ -171,7 +173,7 @@ def menuCheck(questions):
     while True:
         user_input = input(questions)
         user_input = user_input.replace(" ", "")  # removes spaces
-        if len(user_input) == 0 or user_input == "1" or user_input == "0":  # checks for no input o correct route size
+        if len(user_input) == 0 or user_input == "1" or user_input == "0":  # checks for no input or incorrect route size
             print("Error! No input detected or insufficient route size. ")
         # if only letters are entered or special characters
         elif re.match("^[A-Za-z0-9_-]*$", user_input):
@@ -179,7 +181,7 @@ def menuCheck(questions):
             break  # stops question loop
     return values  # returns user input
 
-# done
+
 def grouping(plain_text, totalCols):
     """creates matrix from the plaintext that is used to encrypt and decrypt"""
     if len(plain_text) % totalCols == 0:  # checks if there are extra spaces
@@ -227,7 +229,7 @@ def topToBottom(plaintext, route_size, decrypt=False):
 
 def main():
     # question that asks for the preferred path types
-    pathOptions = """Please select the desired route path.^[1]. clockwise\n[2]. anticlockwise\n[3]. Spiraling inside out\n[4]. Top-to-Bottom\n\n>>> """
+    pathOptions = """Please select the desired route path.\n[1]. clockwise\n[2]. anticlockwise\n[3]. Spiraling inside out\n[4]. Top-to-Bottom\n\n>>> """
     # question that asks for the route size number
     routeSizeChoice = "\nPlease enter a route size above 1: "
     # question that asks for the text that will be encrypted/decrypted
