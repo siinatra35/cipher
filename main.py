@@ -18,7 +18,7 @@ g_borderB = 0  # bottom row
 
 grid = []  # holds matrix
 
-# done
+
 def fillTableForEncrypt(letters, totalRows, totalCols):
     """ creates an array to hold the plaintext and appends extra character """
     # creates a matrix using the text length divided by the total columns
@@ -34,7 +34,7 @@ def fillTableForEncrypt(letters, totalRows, totalCols):
 
     return grid  # returns newly formed grid
 
-#done 
+
 def fillTableForDecrypt(letters, totalRows, totalCols, pathtype):
     """creates decryption matrix using the ciphertext"""
     global g_posR, g_posC  # current row position and and current column position
@@ -63,7 +63,7 @@ def fillTableForDecrypt(letters, totalRows, totalCols, pathtype):
     
     return newGrid  # returns newly formed grid holding the decrypted text
 
-#done
+
 def readCipherText(grid, totalRows, totalCols, pathtype):
     """reads the newly created cipher text"""
     initPathParameters(pathtype, totalRows, totalCols)  # sets the starting, direction, and path for the grid
